@@ -44,8 +44,8 @@ export default function Home() {
           {searchResults.map((product) => (
             <li key={product.id} className="mb-4">
               <div className="bg-white p-4 shadow-md">
-                <img src={product.image} alt={product.title} className="w-16 h-16 rounded-full" />
-                <p className="mt-2">{product.title}</p>
+                <img src={product.product_image} alt={product.product_title} className="w-16 h-16 rounded-full" />
+                <p className="mt-2">{product.product_title}</p>
               </div>
             </li>
           ))}
