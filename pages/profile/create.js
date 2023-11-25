@@ -1,39 +1,39 @@
-import React,{useState, useRef} from 'react';
-import { useForm } from 'react-hook-form'
+import React, { useState, useRef } from 'react';
+import { useForm } from 'react-hook-form';
 import { useSession } from 'next-auth/react';
+import axios from 'axios'; // Adicione esta linha para importar o Axios
 import Appbar from '@/app/components/Appbar';
 import Drawer from '@/app/components/Drawer';
-import 'tailwindcss/tailwind.css'
+import 'tailwindcss/tailwind.css';
 
 const CompleteProfile = () => {
-    const { register, setValue, handleSubmit } = useForm();
-    const editorRef = useRef(null);
-    const [isDrawerOpen, setIsDrawerOpen] = useState();
+  const { register, handleSubmit } = useForm();
+  const editorRef = useRef(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const handleMenuToggle  = () => {
-        setIsDrawerOpen(!isDrawerOpen)
-    }
+  const handleMenuToggle = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
 
-    const onSubmit = (data) => {
-        const onSubmit = async () => {
-            try {
-                const response = await axios.post('https://someapi.com/newUser', data)
-                console.log('Resposta da API (post): ', response.data)
-                
-            } catch (error) {
-                console.log(error);
-                
-            }
-        }
+  const { data: session } = useSession();
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post('http://localhost:3000/users', data);
+      console.log('Resposta da API (post): ', response.data);
+    } catch (error) {
+      console.error(error);
     }
-    const {data: session} = useSession();
-    
+  };
     return(
-        <main className='min-h-screen'>
+        <main className="min-h-screen">
         <Appbar onMenuToggle={handleMenuToggle}></Appbar>
         <Drawer isOpen={isDrawerOpen} onClose={handleMenuToggle}></Drawer>
-
-        <form className="max-w-wd mx-auto p6 bg-white rounded-lg shadow-x1">
+  
+        <form
+          onSubmit={handleSubmit(onSubmit)} // Adicione isso para lidar com a submissão do formulário
+          className="max-w-wd mx-auto p-6 bg-white rounded-lg shadow-x1"
+        >
             <div className="mb-4">
                 <label htmlFor="user_name" className="block text-gray-700">
                     Nome:
@@ -97,25 +97,17 @@ const CompleteProfile = () => {
                 <input {...register('user_cep')} id="user_cep" className="border rounded w-full py-2 px-3"></input>
             </div>
 
-            <div className="mb-4">
-                <label htmlFor="image" className="block text-gray-700">
-                    Foto:
-                </label>
-
-                <input type="file" 
-                    accept="image/*" 
-                    id="image" 
-                    className="py-2 px-3"
-                />
-            </div>
             <div className="flex justify">
-                <button type="submit" onSubmit={onSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Salvar
-                </button>
-            </div>
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Salvar
+          </button>
+        </div>
+      </form>
+    </main>
+  );
+};
 
-        </form>
-        </main>
-    );
-}
 export default CompleteProfile;

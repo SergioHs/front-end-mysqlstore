@@ -24,15 +24,6 @@ const ProductsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
 
-  const loadProducts = async (page, pageSize) => {
-    try {
-      const productsData = await fetchProductsPaginated(page, pageSize);
-      setProducts(productsData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
     loadProducts(currentPage, pageSize);
   }, [currentPage, pageSize]);
@@ -41,10 +32,65 @@ const ProductsPage = () => {
     setCurrentPage(newPage);
   };
 
+
+  const [orderPrice, setOrderPrice] = useState(''); // Estado para armazenar a ordenação
+  const [categoryId, setCategoryId] = useState(''); // Estado para armazenar o ID da categoria
+
+  const handleOrderChange = (event) => {
+    setOrderPrice(event.target.value);
+  };
+
+  const handleCategoryChange = (event) => {
+    setCategoryId(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    loadProducts(currentPage, pageSize, orderPrice, categoryId);
+  };
+
+  const loadProducts = async (page, pageSize, orderPrice, categoryId) => {
+    try {
+      const productsData = await fetchProductsPaginated(page, pageSize, orderPrice, categoryId);
+      setProducts(productsData.products);
+      setCurrentPage(productsData.currentPage);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadProducts(currentPage, pageSize, orderPrice, categoryId);
+  }, [currentPage, pageSize, orderPrice, categoryId]);
+
   return (
     <main className="min-h-screen">
       <Appbar onMenuToggle={handleMenuToggle}></Appbar>
       <Drawer isOpen={isDrawerOpen} onClose={handleMenuToggle}></Drawer>
+      <form onSubmit={handleSubmit} className="flex justify-center mt-4">
+        {/* Select para ordenação */}
+        <select value={orderPrice} onChange={handleOrderChange} className="mr-2">
+          <option value="">Ordenar por</option>
+          <option value="asc">Preço mais baixo</option>
+          <option value="desc">Preço mais alto</option>
+        </select>
+
+        {/* Input text para ID da categoria */}
+        <input
+          type="text"
+          placeholder="ID da Categoria"
+          value={categoryId}
+          onChange={handleCategoryChange}
+          className="mr-2"
+        />
+
+        {/* Botão para enviar o formulário */}
+        <button type="submit" className="bg-blue-500 text-white font-semibold py-2 px-4 rounded">
+          Filtrar
+        </button>
+      </form>
+
+   
       <ul>
         {products.map((product) => (
           <li key={product.product_id}>

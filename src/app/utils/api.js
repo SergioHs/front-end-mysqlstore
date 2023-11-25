@@ -167,13 +167,18 @@ const fetchCategoriesOrderByName = async () => {
 };
 
 
-const fetchProductsPaginated = async (page, pageSize) => {
+const fetchProductsPaginated = async (page, pageSize, orderPrice, categoryId) => {
   try {
-    const response = await fetch(`http://localhost:3000/products/paginated?page=${page}&pageSize=${pageSize}`);
-    const productsData = await response.json();
-    return productsData;
+    const response = await fetch(`http://localhost:3000/products/filtered?page=${page}&categoryId=${categoryId}&orderPrice=${orderPrice}`);
+    
+    if (!response.ok) {
+      throw new Error('Erro ao obter produtos');
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
-    throw new Error('Erro ao obter produtos paginados. Detalhes: ' + error.message);
+    throw error;
   }
 };
 
