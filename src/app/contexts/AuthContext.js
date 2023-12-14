@@ -3,7 +3,7 @@ import React, {createContext, useContext, useState } from 'react';
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [userInfo, setUser] = useState(null);
 
     const login =(userData) => {
         setUser(userData);
@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
     }
 
     return(
-        <AuthContext.Provider value={{ user, login, logout}}>
+        <AuthContext.Provider value={{ userInfo, login, logout}}>
             {children}
         </AuthContext.Provider>
     )

@@ -8,11 +8,14 @@ import { useRouter } from 'next/router';
 import { fetchProducts } from '@/app/utils/api';
 import { CartContext } from '@/app/contexts/CartContext';
 import { ProductContainer, ProductImage, CardButton } from '@/app/styles/ProductsStyles';
+import { AuthContext } from '@/app/contexts/AuthContext';
 
 const ProductsPage = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { addToCart } = useContext(CartContext);
 
+  const { userInfo } = useContext(AuthContext);
+  
   const handleMenuToggle = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
@@ -67,6 +70,9 @@ const ProductsPage = () => {
     <main className="min-h-screen">
      <Appbar onMenuToggle={handleMenuToggle}></Appbar>
       <Drawer isOpen={isDrawerOpen} onClose={handleMenuToggle}></Drawer>
+      
+      <h1>Bem vindo {userInfo.user.user_name}</h1>
+      
       <form onSubmit={handleSubmit} className="flex justify-center mt-4">
         <select value={orderPrice} onChange={handleOrderChange} className="mr-2">
           <option value="">Ordenar por</option>
