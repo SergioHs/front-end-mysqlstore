@@ -182,12 +182,37 @@ const fetchProductsPaginated = async (page, pageSize, orderPrice, categoryId) =>
   }
 };
 
+const authUser = async (data) => {
+  try {
+    const response = await fetch(`http://localhost:3000/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Erro ao logar');
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Erro ao logar usuário', error);
+    return false;
+  }
+}
+
+
+
+
 export {
   fetchCategories,
   deleteCategory,
   fetchProducts,
   deleteProduct,
   searchProducts,
+  authUser,
   fetchProduct,
   updateProduct,
   createProduct,

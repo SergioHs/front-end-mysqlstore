@@ -5,7 +5,7 @@ import Drawer from '@/app/components/Drawer';
 import React, { useContext, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { fetchProductsPaginated } from '@/app/utils/api';
+import { fetchProducts } from '@/app/utils/api';
 import { CartContext } from '@/app/contexts/CartContext';
 import { ProductContainer, ProductImage, CardButton } from '@/app/styles/ProductsStyles';
 
@@ -51,8 +51,8 @@ const ProductsPage = () => {
 
   const loadProducts = async (page, pageSize, orderPrice, categoryId) => {
     try {
-      const productsData = await fetchProductsPaginated(page, pageSize, orderPrice, categoryId);
-      setProducts(productsData.products);
+      const productsData = await fetchProducts();
+      setProducts(productsData);
       setCurrentPage(productsData.currentPage);
     } catch (error) {
       console.error(error);
@@ -65,17 +65,14 @@ const ProductsPage = () => {
 
   return (
     <main className="min-h-screen">
-      <Appbar onMenuToggle={handleMenuToggle}></Appbar>
+     <Appbar onMenuToggle={handleMenuToggle}></Appbar>
       <Drawer isOpen={isDrawerOpen} onClose={handleMenuToggle}></Drawer>
       <form onSubmit={handleSubmit} className="flex justify-center mt-4">
-        {/* Select para ordenação */}
         <select value={orderPrice} onChange={handleOrderChange} className="mr-2">
           <option value="">Ordenar por</option>
           <option value="asc">Preço mais baixo</option>
           <option value="desc">Preço mais alto</option>
         </select>
-
-        {/* Input text para ID da categoria */}
         <input
           type="text"
           placeholder="ID da Categoria"
@@ -84,7 +81,6 @@ const ProductsPage = () => {
           className="mr-2"
         />
 
-        {/* Botão para enviar o formulário */}
         <button type="submit" className="bg-blue-500 text-white font-semibold py-2 px-4 rounded">
           Filtrar
         </button>
@@ -93,19 +89,18 @@ const ProductsPage = () => {
    
       <ul>
         {products.map((product) => (
-          <li key={product.product_id}>
+          <li key={product.id}>
             <ProductContainer>
-              <p>{product.product_title}</p>
-              <p>{product.product_price}</p>
-              <p>{product.product_description}</p>
-              <p>{product.product_category} </p>
+              <p>{product.title}</p>
+              <p>{product.price}</p>
+              <p>{product.description}</p>
+              <p>{product.category} </p>
               <CardButton onClick={() => addToCart(product)}>Add cart</CardButton>
             </ProductContainer>
           </li>
         ))}
       </ul>
 
-      {/* Adicione a navegação de páginação */}
       <div className="flex justify-center mt-4">
         <button
           className="bg-blue-500 text-white font-semibold py-2 px-4 rounded mr-2"
