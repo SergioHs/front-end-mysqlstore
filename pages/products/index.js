@@ -70,11 +70,7 @@ const ProductsPage = () => {
     <main className="min-h-screen">
      <Appbar onMenuToggle={handleMenuToggle}></Appbar>
       <Drawer isOpen={isDrawerOpen} onClose={handleMenuToggle}></Drawer>
-      
-      {userInfo && (
-    <>
-      <h1>Bem vindo {userInfo.user && userInfo.user.user_name}</h1>
-      
+            
       <form onSubmit={handleSubmit} className="flex justify-center mt-4">
         <select value={orderPrice} onChange={handleOrderChange} className="mr-2">
           <option value="">Ordenar por</option>
@@ -124,9 +120,6 @@ const ProductsPage = () => {
           Próxima
         </button>
       </div>
-
-    </>
-     )}
     </main>
   );
 };

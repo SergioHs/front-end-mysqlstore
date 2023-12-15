@@ -3,20 +3,29 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-    const isLocalStorageAvailable = typeof localStorage !== 'undefined';
-
-    const storedUserInfo = isLocalStorageAvailable ? localStorage.getItem('userInfo') : null;
-    const [userInfo, setUser] = useState(storedUserInfo ? JSON.parse(storedUserInfo) : null);
+    const [userInfo, setUser] = useState(null);
 
     useEffect(() => {
-        if (isLocalStorageAvailable) {
+        const getStoredUserInfo = () => {
+            if (typeof window !== 'undefined') {
+                const storedUserInfo = localStorage.getItem('userInfo');
+                return storedUserInfo ? JSON.parse(storedUserInfo) : null;
+            }
+            return null;
+        }
+
+        setUser(getStoredUserInfo());
+    }, []);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
             if (userInfo) {
                 localStorage.setItem('userInfo', JSON.stringify(userInfo));
             } else {
                 localStorage.removeItem('userInfo');
             }
         }
-    }, [userInfo, isLocalStorageAvailable]);
+    }, [userInfo]);
 
     const login = (userData) => {
         setUser(userData);
