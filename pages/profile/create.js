@@ -20,23 +20,53 @@ const CompleteProfile = () => {
 
   const router = useRouter();
 
+  // const onSubmit = async (data) => {
+  //   try {
+  //     console.log(data)
+  //     const response = await axios.post('http://localhost:3000/users', data);
+  //     console.log('Resposta da API (post): ', response.data);
+  //     alert('Usuário criado com sucesso! Redirecionando para Login! ')
+  //     router.push('/login')
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('http://localhost:3000/users', data);
-      console.log('Resposta da API (post): ', response.data);
-      alert('Usuário criado com sucesso! Redirecionando para Login! ')
-      router.push('/login')
+        // Crie uma instância de FormData
+        let formData = new FormData();
+
+        // Anexe campos ao formulário
+        for (let key in data) {
+            formData.append(key, data[key]);
+        }
+
+        // Anexe a imagem ao formulário
+        // Supondo que 'imageFile' seja um objeto File representando a imagem
+        formData.append('user_image', data.user_image[0]);
+
+        // Faça a requisição POST
+        const response = await axios.post('http://localhost:3000/users', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        console.log('Resposta da API (post): ', response.data);
+        alert('Usuário criado com sucesso! Redirecionando para Login! ')
+        router.push('/login')
     } catch (error) {
-      console.error(error);
+        console.error(error);
     }
-  };
+};
+  
     return(
         <main className="min-h-screen">
         <Appbar onMenuToggle={handleMenuToggle}></Appbar>
         <Drawer isOpen={isDrawerOpen} onClose={handleMenuToggle}></Drawer>
           <h1> Página de Criação de Usuário </h1>
   
-        <form
+        <form enctype="multipart/form-data"
           onSubmit={handleSubmit(onSubmit)} // Adicione isso para lidar com a submissão do formulário
           className="max-w-wd mx-auto p-6 bg-white rounded-lg shadow-x1"
         >
@@ -103,6 +133,12 @@ const CompleteProfile = () => {
                 <input {...register('user_cep')} id="user_cep" className="border rounded w-full py-2 px-3"></input>
             </div>
 
+            <div className="mb-4">
+                <label htmlFor="user_image" className="block text-gray-700">
+                    Imagem:
+                </label>
+                <input type="file" {...register('user_image')} id="user_image" className="border rounded w-full py-2 px-3"></input>
+            </div>
             <div className="flex justify">
           <button
             type="submit"
