@@ -25,8 +25,8 @@ const deleteProduct = async (productId) => {
   
 const searchProducts = async (searchTerm) => {
 try {
-    if (searchTerm) {
-    const response = await fetch(`http://localhost:3000/products/search/?searchTerm=${searchTerm}`);
+    if (searchTerm) { 
+    const response = await fetch(`http://localhost:3000/products/search/${searchTerm}`);
     if (response.ok) {
       const data = await response.json();
         return data;

@@ -1,7 +1,7 @@
 import React,{ useContext, useEffect} from "react";
 import { ThemeContext } from "@/app/contexts/ThemeContext"
 import { AuthContext, AuthProvider, useAuth } from '@/app/contexts/AuthContext';
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 function Appbar({onMenuToggle}) {
   const { theme } = useContext(ThemeContext);
