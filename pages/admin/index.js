@@ -19,11 +19,12 @@ const AdminPage = () => {
   const { userInfo } = useContext(AuthContext);
 
   useEffect(() => {
-    if (userInfo && userInfo.user.user_role !== 'admin') {
+    if (!userInfo) {
       router.push('/login');
+    } else if (userInfo.user.user_role !== 'admin'){
+      router.push('/products')
     }
   }, [userInfo]);
-
 
   const [products, setProducts] = useState([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
