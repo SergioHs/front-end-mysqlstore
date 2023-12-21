@@ -41,7 +41,7 @@ function Appbar({onMenuToggle}) {
 
         <img className="object-contain h-12 w-12 rounded-full" src={'http://localhost:3000/'+userInfo?.user.user_image}/>
 
-        <h1> {userInfo && userInfo.user.user_name}</h1>
+        <h1> {userInfo && userInfo.user.user_name}  ({userInfo && userInfo.user.user_role})</h1>
       </div>)}
 
       <button className="mx-4" onClick={onLogout}>

@@ -4,17 +4,26 @@ import Appbar from '@/app/components/Appbar';
 import Drawer from '@/app/components/Drawer';
 import React, {useContext, useEffect, useState} from 'react';
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Link from 'next/link';
 import { fetchProducts, deleteProduct, applyDiscount } from '@/app/utils/api'
 import { CartContext } from '@/app/contexts/CartContext';
 import { ProductContainer, ProductImage, CardButton } from '@/app/styles/ProductsStyles'
+import { AuthContext, AuthProvider, useAuth } from '@/app/contexts/AuthContext';
 
 const AdminPage = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { addToCart } = useContext(CartContext);
   const { data: session } = useSession();
   const router = useRouter();
+  const { userInfo } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (userInfo && userInfo.user.user_role !== 'admin') {
+      router.push('/login');
+    }
+  }, [userInfo]);
+
 
   const [products, setProducts] = useState([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
@@ -90,6 +99,8 @@ const AdminPage = () => {
   
   return (
     <main className="min-h-screen">
+    {userInfo && (
+      <>    
     <Appbar onMenuToggle={handleMenuToggle}></Appbar>
     <Drawer isOpen={isDrawerOpen} onClose={handleMenuToggle}></Drawer>
     <ul>
@@ -123,7 +134,10 @@ const AdminPage = () => {
         </li>
       ))}
     </ul>
+    </>
+    )}
   </main>
+  
   );
 
 }

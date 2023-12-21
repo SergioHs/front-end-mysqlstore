@@ -99,6 +99,18 @@ const CompleteProfile = () => {
             </div>
 
             <div className="mb-4">
+                <label htmlFor="user_role" className="block text-gray-700">
+                    Nível de acesso:
+                </label>
+
+                <select {...register('user_role')} className="border rounded w-full py-2 px-3">
+                    <option value='user'>Usuário</option>
+                    <option value='admin'>Administrador</option>
+                </select>
+
+            </div>
+
+            <div className="mb-4">
                 <label htmlFor="user_phone" className="block text-gray-700">
                     Telefone:
                 </label>
